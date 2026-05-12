@@ -7,8 +7,9 @@ let totalPages = 0
 let items = 12
 let nowPage = 1
 
-async function productosEcommerce() {
-    const response = await fetch(URL)
+async function productosEcommerce(page) {
+    let skip = (page - 1)*items
+    const response = await fetch(`https://dummyjson.com/products?limit=${items}&skip=${skip}&select=title,price`)
     const data = await response.json()
     const products = data.products
     
@@ -54,14 +55,12 @@ async function productosEcommerce() {
 
 
 prevBtn.addEventListener('click', ()=>{
-    if(nowPage <= 1){
-        return
-    }else {
-        nowPage--
+    if(nowPage > totalPages){
+        nowPage--;
+        productosEcommerce(nowPage)
     }
 })
 nextBtn.addEventListener('click', ()=>{
     nowPage++
+    productosEcommerce(nowPage)
 })
-
-productosEcommerce()
